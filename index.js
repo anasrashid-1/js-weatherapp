@@ -1,5 +1,6 @@
 let APIkey = "570946d91ba7a0c6f87c2e7d33da2971";
 
+
 const dateTime = document.querySelector(".dateTime");
 const map = document.querySelector(".map");
 const liveLocation = document.getElementById("liveLocation");
@@ -180,43 +181,75 @@ async function getWeatherOnLocation(lat, lon) {
 window.addEventListener("load", getLocation());
 
 async function weeklyForecast(latitude, longitude) {
-  let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&appid=${APIkey}&units=metric`;
-
-  let res = await fetch(url);
-  let data = await res.json();
-  //console.log(data);
-  showWeeklyData(data.daily);
-}
-
-function showWeeklyData(data) {
-  let container = document.querySelector(".weeklyForecast");
-  container.innerHTML = null;
-
-  // let heading = document.createElement("h2");
-  // heading.innerText = `Weekly Forecast :-`;
-  // container.append(heading);
-
-  data.forEach((elem) => {
-    let timeStamp = elem.dt;
-    let day = new Date(timeStamp * 1000);
-
-    let dayOfWeek =
-      days[day.getDay()] + ", " + months[day.getMonth()] + day.getDate();
-
-    let weekDay = document.createElement("h4");
-    weekDay.innerText = dayOfWeek;
-
-    let image = document.createElement("img");
-    image.src = `./Images/weather_icons/${elem.weather[0].icon}.png`;
-
-    let dayTemp = document.createElement("p");
-    dayTemp.innerText = `Day:- ${elem.temp.day}°C`;
-
-    let nightTemp = document.createElement("p");
-    nightTemp.innerText = `Night:- ${elem.temp.night}°C`;
-
-    let div = document.createElement("div");
-    div.append(weekDay, image, dayTemp, nightTemp);
-    container.append(div);
-  });
-}
+    const APIKey = "570946d91ba7a0c6f87c2e7d33da2971";
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${APIKey}`;
+    
+    console.log("url", url);
+    
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Failed to fetch forecast data");
+      }
+      const data = await res.json();
+      showWeeklyData(data.list);
+    } catch (error) {
+      console.error("Error fetching forecast data:", error);
+    }
+  }
+  
+  function showWeeklyData(data) {
+    const container = document.querySelector(".weeklyForecast");
+    container.innerHTML = "";
+  
+    const groupedForecast = groupForecastByDay(data);
+  
+    groupedForecast.forEach(([day, forecasts]) => {
+      const div = document.createElement("div");
+      div.classList.add("forecast-day");
+  
+      const heading = document.createElement("h2");
+      heading.innerText = day;
+      div.appendChild(heading);
+  
+      forecasts.forEach((forecast) => {
+        const timeStamp = forecast.dt;
+        const day = new Date(timeStamp * 1000);
+  
+        const dayOfWeek =
+          days[day.getDay()] + ", " + months[day.getMonth()] + " " + day.getDate();
+  
+        const weekDay = document.createElement("h4");
+        weekDay.innerText = dayOfWeek;
+  
+        const image = document.createElement("img");
+        image.src = `https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`;
+  
+        const dayTemp = document.createElement("p");
+        dayTemp.innerText = `Day:- ${(forecast.main.temp - 273.15).toFixed(1)}°C`;
+  
+        const nightTemp = document.createElement("p");
+        nightTemp.innerText = `Night:- ${(forecast.main.temp - 273.15).toFixed(1)}°C`;
+  
+        const forecastDiv = document.createElement("div");
+        forecastDiv.classList.add("forecast-item");
+        forecastDiv.append(weekDay, image, dayTemp, nightTemp);
+        div.appendChild(forecastDiv);
+      });
+  
+      container.appendChild(div);
+    });
+  }
+  
+  function groupForecastByDay(data) {
+    const groupedForecast = {};
+    data.forEach((forecast) => {
+      const date = new Date(forecast.dt * 1000);
+      const day = date.toLocaleDateString("en-US", { weekday: "long" });
+      if (!groupedForecast[day]) {
+        groupedForecast[day] = [];
+      }
+      groupedForecast[day].push(forecast);
+    });
+    return Object.entries(groupedForecast);
+  }
