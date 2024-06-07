@@ -33,4 +33,4 @@ In addition to displaying current weather details, the app provides a five-day w
 1. Clone the repository:
 
    ```bash
-   git clone [https://github.com/your-username/weather-forecast-app.git](https://github.com/anasrashid-1/js-weatherapp)
+   git clone [https://github.com/anasrashid-1/js-weatherapp]
