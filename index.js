@@ -105,7 +105,7 @@ function appendSearchedCity(data) {
   tempDiv.setAttribute("class", "tempDiv");
 
   let cloudImg = document.createElement("img");
-  cloudImg.src = `./Images/weather_icons/${data.weather[0].icon}.png`;
+  cloudImg.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
 
   let temp = document.createElement("h1");
   temp.innerText = `${data.main.temp}°C`;
@@ -171,7 +171,7 @@ function getLocation() {
 
 async function getWeatherOnLocation(lat, lon) {
   let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIkey}&units=metric`;
-
+    console.log(url)
   let res = await fetch(url);
   let data = await res.json();
   //console.log(data);
@@ -249,7 +249,8 @@ async function weeklyForecast(latitude, longitude) {
     const groupedForecast = {};
     data.forEach((forecast) => {
       const date = new Date(forecast.dt * 1000);
-      const day = date.toLocaleDateString("en-US", { weekday: "long" });
+      const day = date.toLocaleDateString("en-US", { weekday: "short" });
+      
       if (!groupedForecast[day]) {
         groupedForecast[day] = [];
       }

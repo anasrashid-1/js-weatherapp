@@ -176,6 +176,7 @@
     height: 60px;
   }
   
+
   @media all and (max-width: 800px) {
     .container {
       flex-direction: column;
