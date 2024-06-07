@@ -34,3 +34,4 @@ In addition to displaying current weather details, the app provides a five-day w
 
    ```bash
    git clone [https://github.com/anasrashid-1/js-weatherapp]
+![Macbook-Air-127 0 0 1](https://github.com/anasrashid-1/js-weatherapp/assets/125889610/4cefe1d2-a578-4e26-8b6f-994fa8d155e1)
