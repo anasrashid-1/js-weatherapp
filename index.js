@@ -212,30 +212,34 @@ async function weeklyForecast(latitude, longitude) {
       heading.innerText = day;
       div.appendChild(heading);
   
-      forecasts.forEach((forecast) => {
-        const timeStamp = forecast.dt;
-        const day = new Date(timeStamp * 1000);
+      // Selecting weather data for one time per day
+      const selectedForecast = selectForecastForOneTime(forecasts);
   
-        const dayOfWeek =
-          days[day.getDay()] + ", " + months[day.getMonth()] + " " + day.getDate();
+      const timeStamp = selectedForecast.dt;
+      const dayOfWeek =
+        days[new Date(timeStamp * 1000).getDay()] + ", " +
+        months[new Date(timeStamp * 1000).getMonth()] + " " +
+        new Date(timeStamp * 1000).getDate();
   
-        const weekDay = document.createElement("h4");
-        weekDay.innerText = dayOfWeek;
+      const weekDay = document.createElement("h4");
+      weekDay.innerText = dayOfWeek;
   
-        const image = document.createElement("img");
-        image.src = `https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`;
+      const image = document.createElement("img");
+      image.src = `https://openweathermap.org/img/wn/${selectedForecast.weather[0].icon}.png`;
   
-        const dayTemp = document.createElement("p");
-        dayTemp.innerText = `Day:- ${(forecast.main.temp - 273.15).toFixed(1)}°C`;
+      const weatherDescription = document.createElement("p");
+      weatherDescription.innerText = `Weather: ${selectedForecast.weather[0].description}`;
   
-        const nightTemp = document.createElement("p");
-        nightTemp.innerText = `Night:- ${(forecast.main.temp - 273.15).toFixed(1)}°C`;
+      const dayTemp = document.createElement("p");
+      dayTemp.innerText = `Day:- ${(selectedForecast.main.temp - 273.15).toFixed(1)}°C`;
   
-        const forecastDiv = document.createElement("div");
-        forecastDiv.classList.add("forecast-item");
-        forecastDiv.append(weekDay, image, dayTemp, nightTemp);
-        div.appendChild(forecastDiv);
-      });
+      const nightTemp = document.createElement("p");
+      nightTemp.innerText = `Night:- ${(selectedForecast.main.temp - 273.15).toFixed(1)}°C`;
+  
+      const forecastDiv = document.createElement("div");
+      forecastDiv.classList.add("forecast-item");
+      forecastDiv.append(weekDay, image, weatherDescription, dayTemp, nightTemp);
+      div.appendChild(forecastDiv);
   
       container.appendChild(div);
     });
@@ -253,3 +257,17 @@ async function weeklyForecast(latitude, longitude) {
     });
     return Object.entries(groupedForecast);
   }
+  
+  function selectForecastForOneTime(forecasts) {
+    // Selecting the forecast closest to noon (12 PM)
+    const targetTime = 12; // 12 PM
+    const targetIndex = forecasts.findIndex((forecast) => {
+      const hour = new Date(forecast.dt * 1000).getHours();
+      return hour >= targetTime;
+    });
+    // If no forecast found for 12 PM or later, select the last forecast of the day
+    return targetIndex !== -1 ? forecasts[targetIndex] : forecasts[forecasts.length - 1];
+  }
+  
+
+  

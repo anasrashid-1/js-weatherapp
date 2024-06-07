@@ -5,7 +5,7 @@
   }
   
   body {
-    background: url("./Images/Background.jpg") 100% / cover no-repeat;
+    background: url("https://assamtribune.com/h-upload/2022/03/01/1330873-clouds-weather.webp?width=500&height=300") 100% / cover no-repeat;
     font-family: Arial, Helvetica, sans-serif;
     height: 100%;
   }
@@ -27,7 +27,7 @@
     outline: none;
     border: 2px solid #2e2f32;
     color: #fff;
-    border-radius: 50px;
+    border-radius: 10px;
   }
   
   .search button {
@@ -36,7 +36,7 @@
   }
   
   #liveLocation {
-    background-color: #6495ed;
+    background-color: #1fa8b7;
   }
   
   #liveLocation:hover {
@@ -44,7 +44,7 @@
   }
   
   .search button:hover {
-    background-color: limegreen;
+    background-color: rgb(199, 148, 53);
   }
   .search button:active {
     transform: scale(0.9);
@@ -82,7 +82,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
     margin: 10px 0;
     gap: 5px;
@@ -131,6 +131,7 @@
   .map iframe {
     width: 100% !important ;
     height: 100% !important ;
+    border-radius: 10px;
   }
   
   .weeklyForecast {
@@ -185,10 +186,16 @@
     }
   }
   
-  @media all and (max-width: 676px) {
+  @media all and (max-width: 616px) {
     .search {
       width: 100%;
       flex-wrap: wrap;
+    }
+    #liveLocation{
+        width: 96%;
+    }
+    #query, #searchBtn{
+        width: 48%
     }
   }
   
